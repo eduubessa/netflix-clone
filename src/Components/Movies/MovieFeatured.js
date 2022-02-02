@@ -5,8 +5,11 @@ import "remixicon/fonts/remixicon.css"
 function MovieFeatured({item}) {
 
     let firstDate = new Date(item.first_air_date);
+    let genres = [];
 
-    console.log(item);
+    for (let i in item.genres) {
+        genres.push(item.genres[i].name);
+    }
 
     return (
         <section className="featured" style={{
@@ -17,14 +20,16 @@ function MovieFeatured({item}) {
             <div className="featured-vertical">
                 <div className="featured-horizontal">
                     <div className="featured-name">{item.original_name}</div>
-                    <div className="featured-info">
-                        <div className="featured-points">{item.vote_average}</div>
-                        <div className="featured-year">{ firstDate.getFullYear()}</div>
+                    <div className="featued-info">
+                        <div className="featured-points">{item.vote_average} pontos</div>
+                        <div className="featured-year">{firstDate.getFullYear()}</div>
+                        <div className="featured-seasons">{item.number_of_seasons} Temporadas</div>
                         <div className="featured-overview">{item.overview}</div>
                         <div className="featured-buttons">
-                            <button className="featured-button-watch"><i className="ri-play-fill"></i> Watch Now</button>
-                            <button className="featured-button-info"><i className="ri-information-line"></i> Mais informações</button>
+                            <a href={`/watch/${item.id}`} className="featured-button-watch">► Assistir</a>
+                            <a href={`/list/add/${item.id}`} className="featured-button-mylist">+ Minha Lista</a>
                         </div>
+                        <div className="featured-genres"><strong>Gêneros:</strong> {genres.join(', ')}</div>
                     </div>
                 </div>
             </div>

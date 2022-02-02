@@ -2,15 +2,24 @@ import './App.css';
 import React, {useEffect, useState} from "react";
 import TheMovieDatabase from "./Services/TheMovieDatabase";
 
+import Header from './Components/Header';
+import Dashboard from './Components/Dashboard';
 import MovieRow from "./Components/Movies/MovieRow";
 import MovieFeatured from "./Components/Movies/MovieFeatured";
+
 
 function App() {
 
     const [movieList, setMovieList] = useState([]);
     const [featuredData, setFeaturedData] = useState(null);
+    const [headerFixed, setHeaderFixed] = useState(false);
 
     useEffect(() => {
+
+        const scrollEventListener = () => {
+          window.scrollY > 10 ? setHeaderFixed(true) : setHeaderFixed(false);
+        };
+
         const __init__ = async () => {
             let list = await TheMovieDatabase.fetchInitiliazeList()
             setMovieList(list);
@@ -24,12 +33,18 @@ function App() {
 
         __init__()
 
+        window.addEventListener('scroll', scrollEventListener);
+
+        return () => {
+            window.removeEventListener('scroll', scrollEventListener);
+        }
+
     }, []);
 
     return (
         <div className="page">
+            <Header fixed={headerFixed}/>
             { featuredData && <MovieFeatured item={featuredData} /> }
-
             <section className="lists">
                 {
                     movieList.map((item, key) => (
